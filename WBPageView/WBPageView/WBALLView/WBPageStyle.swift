@@ -12,10 +12,10 @@ import UIKit
 struct WBPageStyle {
     
     var titleHeight : CGFloat = 44  //titleView的高度
-    var titleNomalColor : UIColor = UIColor.whiteColor()
-    var titleSelecteColor : UIColor = UIColor.redColor()
+    var titleNomalColor : UIColor = UIColor(r: 255, g: 255, b: 255)
+    var titleSelecteColor : UIColor = UIColor(r: 255, g: 127, b: 0)
     var titleFont : UIFont = UIFont.systemFontOfSize(14)
-    var isScrollEnable : ObjCBool = false
+    var isScrollEnable : ObjCBool = false //TitleView是否可以滚动
     var titleMargin : CGFloat = 20
     
     

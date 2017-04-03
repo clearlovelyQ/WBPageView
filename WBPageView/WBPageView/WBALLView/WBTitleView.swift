@@ -23,6 +23,17 @@ class WBTitleView: UIView,WBContentViewDelegate {
     
      var titles : [String]
      var style : WBPageStyle
+    
+   lazy var  normalRGB : (CGFloat , CGFloat, CGFloat) = UIColor.getRGBValueFromColor(self.style.titleNomalColor)
+   lazy var selectRGB : (CGFloat , CGFloat, CGFloat) = UIColor.getRGBValueFromColor(self.style.titleSelecteColor)
+   lazy var delaRGB : (CGFloat , CGFloat , CGFloat) = {
+     
+     let delaR = self.selectRGB.0 - self.normalRGB.0
+     let delaG = self.selectRGB.1 - self.normalRGB.1
+     let delaB = self.selectRGB.2 - self.normalRGB.2
+    
+    return (delaR,delaG,delaB)
+    }()
 
     //使用调用闭包的方式，懒加载一个UIScrollView
      lazy var scrollView : UIScrollView = {
@@ -179,6 +190,7 @@ extension WBTitleView{
 extension WBTitleView{
 
     func contentView(contentView: WBContentView, didScroll index: Int) {
+     
         currentIndex = index
         adjustLabelPosition()
         
@@ -186,9 +198,13 @@ extension WBTitleView{
     
 func contentView(contentView:WBContentView,sourceIndex:Int,targartIndex:Int,progress:CGFloat){
     
-//    
-//    let sourceLabel = titleLabels[sourceIndex]
-//    let targartLabel = titleLabels[targartIndex]
+    //获取label
+    let sourceLabel = titleLabels[sourceIndex]
+    let targartLabel = titleLabels[targartIndex]
+    //颜色渐变：获取初始的颜色和最后的颜色，找出差值，progress
+    sourceLabel.textColor = UIColor(r: selectRGB.0 - delaRGB.0 * progress, g: selectRGB.1 - delaRGB.1 * progress, b: selectRGB.2 - delaRGB.2 * progress)
+    targartLabel.textColor = UIColor(r: normalRGB.0 + delaRGB.0 * progress, g: selectRGB.1 + delaRGB.1 * progress, b: selectRGB.2 + delaRGB.2 * progress)
+    
 
     
     }

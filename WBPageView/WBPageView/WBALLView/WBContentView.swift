@@ -23,6 +23,7 @@ class WBContentView: UIView,UICollectionViewDelegate,UICollectionViewDataSource 
     weak var delegate : WBContentViewDelegate?
     //起始的偏移量的x
     var startOffsetX :CGFloat = 0
+    var isForbidScrollDelegate :Bool = false
 
     var childVCs : [UIViewController]
     var parentVC : UIViewController
@@ -113,6 +114,8 @@ extension WBContentView{
 extension WBContentView {
 
     func titleView(titleView: WBTitleView, targartIndex: Int) {
+        
+        isForbidScrollDelegate = true
        let indexPath = NSIndexPath(forItem: targartIndex, inSection: 0)
        collectionView.scrollToItemAtIndexPath(indexPath, atScrollPosition: .CenteredHorizontally, animated: false)
         
@@ -123,16 +126,18 @@ extension WBContentView {
 extension WBContentView{
     
     func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        isForbidScrollDelegate = false
         startOffsetX = scrollView.contentOffset.x
     }
     
     
     func scrollViewDidScroll(scrollView: UIScrollView) {
         
+       
         let contentOffsetX = scrollView.contentOffset.x
      //0.先判断是否滑动。startOffset = contentOffset
      //guard:是真的就继续执行，假的走{}
-        guard contentOffsetX != startOffsetX else{
+        guard contentOffsetX != startOffsetX && !isForbidScrollDelegate else{
           
             return
         
@@ -152,6 +157,12 @@ extension WBContentView{
             if targartIndex >= childVCs.count{
             
                targartIndex = childVCs.count - 1
+            }
+            //最后停止的时候，会出现一个bug，从0->1 ,最后是从0->2
+            if contentOffsetX - startOffsetX == collectionView.bounds.width{
+             
+                targartIndex = sourceIndex
+            
             }
             //当前滑动的一个比例
             progress = (contentOffsetX - startOffsetX) / collectionView.bounds.width
@@ -173,6 +184,7 @@ extension WBContentView{
 
     //直接滚动一整个ScrollView
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        
         if !decelerate{
         scrollDidEnd()
         }
@@ -183,7 +195,7 @@ extension WBContentView{
     }
 
     private func scrollDidEnd(){
-   
+   isForbidScrollDelegate = true
         let i  = Int(collectionView.contentOffset.x / collectionView.bounds.width)
         delegate?.contentView(self, didScroll: i)
         

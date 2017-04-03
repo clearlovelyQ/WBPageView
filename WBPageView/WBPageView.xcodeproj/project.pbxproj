@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0491F7C31E928FA1005718A1 /* UIColor-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0491F7C21E928FA1005718A1 /* UIColor-Extension.swift */; };
 		049D688C1E907D460045A971 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049D688B1E907D460045A971 /* AppDelegate.swift */; };
 		049D688E1E907D460045A971 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049D688D1E907D460045A971 /* ViewController.swift */; };
 		049D68911E907D470045A971 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 049D688F1E907D470045A971 /* Main.storyboard */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0491F7C21E928FA1005718A1 /* UIColor-Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor-Extension.swift"; sourceTree = "<group>"; };
 		049D68881E907D460045A971 /* WBPageView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WBPageView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		049D688B1E907D460045A971 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		049D688D1E907D460045A971 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -65,6 +67,7 @@
 				049D689D1E907DD80045A971 /* WBALLView */,
 				049D688B1E907D460045A971 /* AppDelegate.swift */,
 				049D688D1E907D460045A971 /* ViewController.swift */,
+				0491F7C21E928FA1005718A1 /* UIColor-Extension.swift */,
 				049D688F1E907D470045A971 /* Main.storyboard */,
 				049D68921E907D470045A971 /* Assets.xcassets */,
 				049D68941E907D470045A971 /* LaunchScreen.storyboard */,
@@ -161,6 +164,7 @@
 				049D68A31E907E3E0045A971 /* WBContentView.swift in Sources */,
 				049D68A11E907E2F0045A971 /* WBTitleView.swift in Sources */,
 				049D689F1E907E1A0045A971 /* WBPageView.swift in Sources */,
+				0491F7C31E928FA1005718A1 /* UIColor-Extension.swift in Sources */,
 				049D68A51E907EE70045A971 /* WBPageStyle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -309,6 +313,7 @@
 				049D689C1E907D470045A971 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
