@@ -186,9 +186,9 @@ extension WBTitleView{
     
 func contentView(contentView:WBContentView,sourceIndex:Int,targartIndex:Int,progress:CGFloat){
     
-    
-    let sourceLabel = titleLabels[sourceIndex]
-    let targartLabel = titleLabels[targartIndex]
+//    
+//    let sourceLabel = titleLabels[sourceIndex]
+//    let targartLabel = titleLabels[targartIndex]
 
     
     }
