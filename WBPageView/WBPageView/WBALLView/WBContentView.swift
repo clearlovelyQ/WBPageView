@@ -8,10 +8,21 @@
 
 import UIKit
 
+protocol WBContentViewDelegate: class{
+
+    func contentView(contentView:WBContentView,didScroll index :Int)
+    //改变titleView标签的颜色改变
+func contentView(contentView:WBContentView,sourceIndex:Int,targartIndex:Int,progress:CGFloat)
+}
+
 // self在闭包中不能省略
 private let kContentCellId = "contentCell"
 
 class WBContentView: UIView,UICollectionViewDelegate,UICollectionViewDataSource ,WBTitleViewDelegate{
+    
+    weak var delegate : WBContentViewDelegate?
+    //起始的偏移量的x
+    var startOffsetX :CGFloat = 0
 
     var childVCs : [UIViewController]
     var parentVC : UIViewController
@@ -106,6 +117,79 @@ extension WBContentView {
        collectionView.scrollToItemAtIndexPath(indexPath, atScrollPosition: .CenteredHorizontally, animated: false)
         
     }
+
+}
+//MARK: - ScrollViewDelegate
+extension WBContentView{
+    
+    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        startOffsetX = scrollView.contentOffset.x
+    }
+    
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        
+        let contentOffsetX = scrollView.contentOffset.x
+     //0.先判断是否滑动。startOffset = contentOffset
+     //guard:是真的就继续执行，假的走{}
+        guard contentOffsetX != startOffsetX else{
+          
+            return
+        
+        }
+    
+     //1.定义出需要获取的变量
+        var sourceIndex = 0
+        var targartIndex = 0
+        var progress : CGFloat = 0
+     //2.需要的参数
+     //根据当前的偏移量和起始的偏移量来判断左滑还是右滑
+        if(contentOffsetX > startOffsetX){ //左滑
+          
+            sourceIndex = Int(contentOffsetX / collectionView.bounds.width)
+            targartIndex = sourceIndex + 1
+            //防止最后一个越界
+            if targartIndex >= childVCs.count{
+            
+               targartIndex = childVCs.count - 1
+            }
+            //当前滑动的一个比例
+            progress = (contentOffsetX - startOffsetX) / collectionView.bounds.width
+            
+//            print("sourceIndex:\(sourceIndex),selectedIndex:\(selectedIndex),progress:\(progress)")
+        
+        }else{//右滑
+            
+            targartIndex = Int(contentOffsetX / collectionView.bounds.width)
+            sourceIndex = targartIndex + 1
+            progress = (startOffsetX - contentOffsetX) / collectionView.bounds.width
+        
+        }
+     
+        
+    delegate?.contentView(self, sourceIndex: sourceIndex, targartIndex: targartIndex, progress: progress)
+    }
+    
+
+    //直接滚动一整个ScrollView
+    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate{
+        scrollDidEnd()
+        }
+    }
+    //有个减速的过程，滚动到1半，手指松开，自动减速滚动回去
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        scrollDidEnd()
+    }
+
+    private func scrollDidEnd(){
+   
+        let i  = Int(collectionView.contentOffset.x / collectionView.bounds.width)
+        delegate?.contentView(self, didScroll: i)
+        
+        
+    }
+
 
 }
 

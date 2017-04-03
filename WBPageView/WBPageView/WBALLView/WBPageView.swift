@@ -63,6 +63,9 @@ extension WBPageView {
         
         //3.让titleView和contentView相互沟通
         titleView.delegate = contentView
+        contentView.delegate = titleView
+        
+     
         
         
      

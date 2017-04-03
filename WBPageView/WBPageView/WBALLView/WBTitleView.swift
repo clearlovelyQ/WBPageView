@@ -15,7 +15,7 @@ protocol  WBTitleViewDelegate : class {
 
 }
 
-class WBTitleView: UIView {
+class WBTitleView: UIView,WBContentViewDelegate {
     
      // MARK: - 属性
      //代理属性.weak不能修饰协议，可以让代理继承与基协议
@@ -133,38 +133,64 @@ extension WBTitleView{
     func titleLabelClick(tapGes: UITapGestureRecognizer ){
     
      //可选链 取得tap点击的label，可能转成功，可能转不成功
-    //1.校验label是否有值
-        guard let selectedLabel = tapGes.view as? UILabel else {
+    //1.校验label是否有值,将要选中还没选中的label
+        guard let targartLabel = tapGes.view as? UILabel else {
          return
         
         }
-        guard  selectedLabel.tag != currentIndex else{
+        guard  targartLabel.tag != currentIndex else{
         
           return
         }
         let sourceLabel = titleLabels[currentIndex]
         sourceLabel.textColor = style.titleNomalColor
-        selectedLabel.textColor = style.titleSelecteColor
-        currentIndex = selectedLabel.tag
+        targartLabel.textColor = style.titleSelecteColor
+        currentIndex = targartLabel.tag
 //       print(selectedLabel.tag)
         
         //让点击的标签回到中间
-        var  offsetX : CGFloat = selectedLabel.center.x - scrollView.bounds.width * 0.5
-        if offsetX < 0 {
-          offsetX = 0
-        
-        }
-        let offsetMaxX : CGFloat = scrollView.contentSize.width - scrollView.bounds.width
-        if offsetX > offsetMaxX{
-        
-          offsetX = offsetMaxX
-        }
-        scrollView.setContentOffset(CGPoint(x: offsetX, y: 0), animated: false)
+        adjustLabelPosition()
         
       //点击的时候，通知代理
       //可选链，有值就传递，没值就不传递，系统自己判断
         delegate?.titleView(self, targartIndex: currentIndex)
         
+    }
+    
+    func adjustLabelPosition(){
+    
+        let selectLabel = titleLabels[currentIndex]
+        var  offsetX : CGFloat = selectLabel.center.x - scrollView.bounds.width * 0.5
+        if offsetX < 0 {
+            offsetX = 0
+            
+        }
+        let offsetMaxX : CGFloat = scrollView.contentSize.width - scrollView.bounds.width
+        if offsetX > offsetMaxX{
+            
+            offsetX = offsetMaxX
+        }
+        scrollView.setContentOffset(CGPoint(x: offsetX, y: 0), animated: false)
+    
+    }
+
+}
+// MARK: - WBTitleViewDelegate
+extension WBTitleView{
+
+    func contentView(contentView: WBContentView, didScroll index: Int) {
+        currentIndex = index
+        adjustLabelPosition()
+        
+    }
+    
+func contentView(contentView:WBContentView,sourceIndex:Int,targartIndex:Int,progress:CGFloat){
+    
+    
+    let sourceLabel = titleLabels[sourceIndex]
+    let targartLabel = titleLabels[targartIndex]
+
+    
     }
 
 }

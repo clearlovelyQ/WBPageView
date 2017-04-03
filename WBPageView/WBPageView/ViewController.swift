@@ -20,7 +20,7 @@ class ViewController: UIViewController {
         //1.frame
         let pageFrame = CGRect(x: 0, y: 64, width: view.bounds.width, height: view.bounds.height - 64)
         //2.显示的标题
-        let titles = ["推荐","游戏","游玩","LOL","杭州","游玩的时候","你的名字和选择","iOS开发"]
+        let titles = ["推荐","游玩","LOL","杭州","游玩的时候","你的名字和选择","iOS开发"]
         //3.所有子控制器
         var childVCs = [UIViewController]()
            //i没有使用，可以用_来代替
