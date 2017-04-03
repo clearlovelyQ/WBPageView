@@ -51,6 +51,7 @@ extension WBPageView {
         let titleFrame = CGRect(x: 0, y: 0, width: bounds.width, height: style.titleHeight)
         let titleView = WBTitleView(frame: titleFrame, titles: titles, style: style)
         titleView.backgroundColor = UIColor.blueColor()
+      
         addSubview(titleView)
         
         //2.创建contentView
@@ -59,6 +60,9 @@ extension WBPageView {
         contentView.backgroundColor = UIColor.redColor()
        
         addSubview(contentView)
+        
+        //3.让titleView和contentView相互沟通
+        titleView.delegate = contentView
         
         
      

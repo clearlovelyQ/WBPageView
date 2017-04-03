@@ -8,9 +8,19 @@
 
 import UIKit
 
+//表示该协议只能被类遵守
+protocol  WBTitleViewDelegate : class {
+    //不想使用外部参数，可以设置_
+    func  titleView(titleView : WBTitleView , targartIndex:Int)
+
+}
+
 class WBTitleView: UIView {
     
-    // MARK: - 属性
+     // MARK: - 属性
+     //代理属性.weak不能修饰协议，可以让代理继承与基协议
+     weak var delegate : WBTitleViewDelegate?
+    
      var titles : [String]
      var style : WBPageStyle
 
@@ -19,14 +29,16 @@ class WBTitleView: UIView {
     
      let scrollView = UIScrollView(frame: self.bounds)
      scrollView.showsHorizontalScrollIndicator = false
-    //点击最上方的时候，不能滚动到顶部
+     //点击最上方的时候，不能滚动到顶部
      scrollView.scrollsToTop = false
      return scrollView
     
     }()
     
+    //记录当前选中的label
     var currentIndex : Int = 0
-  lazy  var  titleLabels : [UILabel] = [UILabel]()
+    //用一个数组来盛放所有的label
+    lazy  var  titleLabels : [UILabel] = [UILabel]()
     
     
     init(frame: CGRect,titles:[String],style:WBPageStyle) {
@@ -66,17 +78,18 @@ extension WBTitleView {
           let label = UILabel()
           //2.设置label的属性
           label.tag = i
-          label.backgroundColor = UIColor.redColor()
+//          label.backgroundColor = UIColor.redColor()
           label.text = title
           label.textColor = i == 0 ? style.titleSelecteColor :style.titleNomalColor
           label.font = style.titleFont
           label.textAlignment = .Center
           label.userInteractionEnabled = true
-            //3.添加到scrollView上
+          //3.添加到scrollView上
           scrollView.addSubview(label)
-            //4.监听label的点击
+          //4.监听label的点击
             //#selextor(方法名) swift3.0
             let aSelector:Selector = "titleLabelClick:"
+          //5.给label添加手势
             let tapGes = UITapGestureRecognizer(target: self, action:aSelector)
             label.addGestureRecognizer(tapGes)
             
@@ -84,26 +97,31 @@ extension WBTitleView {
 
         }
         
-        //设置label的frame
-        var labelW : CGFloat = bounds.width / CGFloat(titleLabels.count)
-        let labelH : CGFloat = style.titleHeight
-        let labelY : CGFloat = 0
-        var labelX : CGFloat = 0
-        for (i,label) in titleLabels.enumerate(){
+          //6.设置label的frame
+            var labelW : CGFloat = bounds.width / CGFloat(titleLabels.count)
+            let labelH : CGFloat = style.titleHeight
+            let labelY : CGFloat = 0
+            var labelX : CGFloat = 0
+            for (i,label) in titleLabels.enumerate(){
         
-            if style.isScrollEnable {
+            //是否可以滑动
+            if style.isScrollEnable { //可以滑动
+                
               let size = CGSize(width: CGFloat(MAXFLOAT), height: 0)
-              labelW = (label.text! as NSString).boundingRectWithSize(size, options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName: style.titleFont], context: nil).width
-              labelX = i == 0 ? (style.titleMargin * 0.5):(titleLabels[i-1].frame.maxX + style.titleMargin)
+                labelW = (label.text! as NSString).boundingRectWithSize(size, options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName: style.titleFont], context: nil).width
+                labelX = i == 0 ? (style.titleMargin * 0.5):(titleLabels[i-1].frame.maxX + style.titleMargin)
             
-            } else{
+            } else{//不能滑动
+                
                 labelX = labelW * CGFloat(i)
+                
             }
-         label.frame = CGRect(x: labelX, y: labelY, width: labelW, height: labelH)
+                
+                label.frame = CGRect(x: labelX, y: labelY, width: labelW, height: labelH)
         }
         
-        if style.isScrollEnable{
-         scrollView.contentSize = CGSize(width: (titleLabels.last?.frame.maxX)!+(style.titleMargin * 0.5), height: 0)
+            if style.isScrollEnable{
+                scrollView.contentSize = CGSize(width: (titleLabels.last?.frame.maxX)!+(style.titleMargin * 0.5), height: 0)
         
         }
     
@@ -120,12 +138,33 @@ extension WBTitleView{
          return
         
         }
+        guard  selectedLabel.tag != currentIndex else{
+        
+          return
+        }
         let sourceLabel = titleLabels[currentIndex]
         sourceLabel.textColor = style.titleNomalColor
         selectedLabel.textColor = style.titleSelecteColor
         currentIndex = selectedLabel.tag
-       print(selectedLabel.tag)
-    
+//       print(selectedLabel.tag)
+        
+        //让点击的标签回到中间
+        var  offsetX : CGFloat = selectedLabel.center.x - scrollView.bounds.width * 0.5
+        if offsetX < 0 {
+          offsetX = 0
+        
+        }
+        let offsetMaxX : CGFloat = scrollView.contentSize.width - scrollView.bounds.width
+        if offsetX > offsetMaxX{
+        
+          offsetX = offsetMaxX
+        }
+        scrollView.setContentOffset(CGPoint(x: offsetX, y: 0), animated: false)
+        
+      //点击的时候，通知代理
+      //可选链，有值就传递，没值就不传递，系统自己判断
+        delegate?.titleView(self, targartIndex: currentIndex)
+        
     }
 
 }

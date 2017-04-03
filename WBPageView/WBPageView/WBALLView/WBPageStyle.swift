@@ -13,7 +13,7 @@ struct WBPageStyle {
     
     var titleHeight : CGFloat = 44  //titleView的高度
     var titleNomalColor : UIColor = UIColor.whiteColor()
-    var titleSelecteColor : UIColor = UIColor.blueColor()
+    var titleSelecteColor : UIColor = UIColor.redColor()
     var titleFont : UIFont = UIFont.systemFontOfSize(14)
     var isScrollEnable : ObjCBool = false
     var titleMargin : CGFloat = 20
